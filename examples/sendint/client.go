@@ -78,7 +78,6 @@ func main() {
 
 	var elapsedTime int64
 	elapsedTime = 0
-
 	for i := 0; i < numberOfRuns; i++ {
 		start = time.Now()
 		r, err = c.EchoInt(context.Background(), &pb.Wrapper{Number: intI})
@@ -95,8 +94,6 @@ func main() {
 	fmt.Printf("\n Number: %d", r.Number)
 
 	elapsedTime = 0
-	//time.Sleep(2 * time.Second)
-
 	for i := 0; i < numberOfRuns; i++ {
 		start = time.Now()
 		rf, err = c.EchoFloat(context.Background(), &pb.WrapperF{Number: floatF})
@@ -140,7 +137,7 @@ func main() {
 	fmt.Printf("\n Average RTT for long: %d", elapsedTime/numberOfRuns)
 	fmt.Printf("\n Number: %d\n", rl.Number)
 
-	for stringLength := 1024; stringLength < 65537; stringLength *= 2 {
+	for stringLength := 1024; stringLength < 524289; stringLength *= 2 {
 		elapsedTime = 0
 		//time.Sleep(2 * time.Second)
 		str := RandStringRunes(stringLength)

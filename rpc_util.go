@@ -66,14 +66,9 @@ type Codec interface {
 type protoCodec struct{}
 
 func (protoCodec) Marshal(v interface{}) ([]byte, error) {
-	//start := time.Now()
 	var bytearr []byte
 	var err error
-	//for i := 0; i < 100; i++ {
 	bytearr, err = proto.Marshal(v.(proto.Message))
-	//}
-	//elapsed := time.Since(start)
-	//fmt.Printf("\n Time elapsed to marshal the message is : %v", elapsed)
 	return bytearr, err
 }
 
