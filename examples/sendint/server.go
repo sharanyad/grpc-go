@@ -35,35 +35,54 @@ package main
 
 import (
 	"log"
-	"os"
+	"net"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/helloworld/helloworld"
+	pb "google.golang.org/grpc/examples/sendint/sendint"
 )
 
 const (
-	address     = "localhost:50051"
-	defaultName = "lab world xysa checking"
+	port = ":50051"
 )
 
-func main() {
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+// server is used to implement helloworld.GreeterServer.
+type server struct{}
 
-	// Contact the server and print out its response.
-	name := defaultName
-	if len(os.Args) > 1 {
-		name = os.Args[1]
-	}
-	r, err := c.SayHello(context.Background(), &pb.HelloRequest{Name: name})
+// SayHello implements helloworld.GreeterServer
+
+func (s *server) EchoFloat(ctx context.Context, in *pb.WrapperF) (*pb.WrapperF, error) {
+	return &pb.WrapperF{Number: in.Number}, nil
+}
+
+func (s *server) EchoInt(ctx context.Context, in *pb.Wrapper) (*pb.Wrapper, error) {
+      return &pb.Wrapper{Number: in.Number}, nil
+  }
+
+func (s *server) EchoString(ctx context.Context, in *pb.WrapperS) (*pb.WrapperS, error) {
+      return &pb.WrapperS{Number: in.Number}, nil
+  }
+
+func (s *server) EchoComplex(ctx context.Context, in *pb.WrapperComplex) (*pb.WrapperComplex, error) {
+        return &pb.WrapperComplex{Inti: in.Inti, Floatf: in.Floatf, Strings: in.Strings}, nil
+    }
+
+
+/*func (s *server) EchoComplex(in *pb.WrapperComplex, stream pb.SendInt_EchoComplexServer) error {
+        err:= stream.Send(&pb.WrapperComplex{Inti: in.Inti, Floatf: in.Floatf, Strings: in.Strings})
+		if err != nil {
+			return err
+		}
+		return nil
+}*/
+
+
+func main() {
+	lis, err := net.Listen("tcp", port)
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("failed to listen: %v", err)
 	}
-	log.Printf("Greeting: %s", r.Message)
+	s := grpc.NewServer()
+	pb.RegisterSendIntServer(s, &server{})
+	s.Serve(lis)
 }

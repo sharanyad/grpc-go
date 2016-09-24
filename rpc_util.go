@@ -42,6 +42,7 @@ import (
 	"io/ioutil"
 	"math"
 	"os"
+	"time"
 
 	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
@@ -65,7 +66,15 @@ type Codec interface {
 type protoCodec struct{}
 
 func (protoCodec) Marshal(v interface{}) ([]byte, error) {
-	return proto.Marshal(v.(proto.Message))
+	//start := time.Now()
+	var bytearr []byte
+	var err error
+	//for i := 0; i < 100; i++ {
+		bytearr, err = proto.Marshal(v.(proto.Message))
+	//}
+	//elapsed := time.Since(start)
+	//fmt.Printf("\n Time elapsed to marshal the message is : %v", elapsed)
+	return bytearr, err
 }
 
 func (protoCodec) Unmarshal(data []byte, v interface{}) error {
@@ -93,7 +102,10 @@ type gzipCompressor struct {
 }
 
 func (c *gzipCompressor) Do(w io.Writer, p []byte) error {
+	start := time.Now()
 	z := gzip.NewWriter(w)
+	elapsed := time.Since(start)
+	fmt.Printf("\n Time elapsed to compress the message is : %v", elapsed)
 	if _, err := z.Write(p); err != nil {
 		return err
 	}
@@ -121,7 +133,10 @@ func NewGZIPDecompressor() Decompressor {
 }
 
 func (d *gzipDecompressor) Do(r io.Reader) ([]byte, error) {
+	start := time.Now()
 	z, err := gzip.NewReader(r)
+	elapsed := time.Since(start)
+	fmt.Printf("\n Time elapsed to decompress the message is : %v", elapsed)
 	if err != nil {
 		return nil, err
 	}

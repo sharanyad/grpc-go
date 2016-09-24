@@ -13,7 +13,7 @@ updatetestdeps:
 	go get -d -v -t -u -f google.golang.org/grpc/...
 
 build: deps
-	go build google.golang.org/grpc/...
+	go build google.golang.org/grpc/
 
 proto:
 	@ if ! which protoc > /dev/null; then \

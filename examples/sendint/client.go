@@ -34,36 +34,60 @@
 package main
 
 import (
-	"log"
-	"os"
-
-	"golang.org/x/net/context"
-	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/helloworld/helloworld"
-)
+		"log"
+		"time"
+		"fmt"
+		"golang.org/x/net/context"
+		"google.golang.org/grpc"
+		pb "google.golang.org/grpc/examples/sendint/sendint"
+	   )
 
 const (
-	address     = "localhost:50051"
-	defaultName = "lab world xysa checking"
-)
+		//address     = "128.105.37.223:50051"
+		address     = "localhost:50051"
+		defaultNumber = 1
+		numberOfRuns = 1000000
+	  )
 
 func main() {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
+		if err != nil {
+			log.Fatalf("did not connect: %v", err)
+		}
 	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+		c := pb.NewSendIntClient(conn)
 
-	// Contact the server and print out its response.
-	name := defaultName
-	if len(os.Args) > 1 {
-		name = os.Args[1]
-	}
-	r, err := c.SayHello(context.Background(), &pb.HelloRequest{Name: name})
+		// Contact the server and print out its response.
+		var intI int32 = 1
+		//var floatF float32 = 1.12
+		//var stringS string = "erhwkjejkhfjkhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+		/*if len(os.Args) > 1 {
+		  number = strconv.Atoi(os.Args[1])
+		  }*/
+		var start time.Time
+		var elapsed time.Duration
+		//var elapsed int64
+		//var r pb.SendInt_EchoComplexClient
+		//var r2 *pb.WrapperComplex
+		var r *pb.Wrapper
+
+		var elapsedTime int64
+		elapsedTime = 0
+
+		for i:=0; i < numberOfRuns; i++ {
+			start = time.Now()
+			//r, err = c.EchoComplex(context.Background(), &pb.WrapperComplex{Inti: intI, Floatf: floatF, Strings: stringS})
+			//r2, err = r.Recv()
+			r, err = c.EchoInt(context.Background(), &pb.Wrapper{Number: intI})
+			elapsed = time.Since(start)
+			//fmt.Printf("\n RTT : %v", elapsed)
+			elapsedTime += elapsed.Nanoseconds()
+		}
+	fmt.Printf("\n RTT : %d", elapsedTime/numberOfRuns)
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Greeting: %s", r.Message)
+	fmt.Printf("\n Number: %d", r.Number)
+	//fmt.Printf("\n Number:%d, float: %d, string: %s", r2.Inti, r2.Floatf, r2.Strings)
 }
