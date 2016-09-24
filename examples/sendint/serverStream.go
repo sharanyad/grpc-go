@@ -37,9 +37,8 @@ import (
 	"log"
 	"net"
 
-	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/sendint/sendint"
+	pb "google.golang.org/grpc/examples/sendint/sendstream"
 )
 
 const (
@@ -50,38 +49,15 @@ const (
 type server struct{}
 
 // SayHello implements helloworld.GreeterServer
-
-func (s *server) EchoFloat(ctx context.Context, in *pb.WrapperF) (*pb.WrapperF, error) {
-	return &pb.WrapperF{Number: in.Number}, nil
-}
-
-func (s *server) EchoInt(ctx context.Context, in *pb.Wrapper) (*pb.Wrapper, error) {
-	return &pb.Wrapper{Number: in.Number}, nil
-}
-
-func (s *server) EchoString(ctx context.Context, in *pb.WrapperS) (*pb.WrapperS, error) {
-	return &pb.WrapperS{Number: in.Number}, nil
-}
-
-func (s *server) EchoComplex(ctx context.Context, in *pb.WrapperComplex) (*pb.WrapperComplex, error) {
-	return &pb.WrapperComplex{Inti: in.Inti, Floatf: in.Floatf, Strings: in.Strings}, nil
-}
-
-func (s *server) EchoDouble(ctx context.Context, in *pb.WrapperD) (*pb.WrapperD, error) {
-	return &pb.WrapperD{Number: in.Number}, nil
-}
-
-func (s *server) EchoLong(ctx context.Context, in *pb.WrapperL) (*pb.WrapperL, error) {
-	return &pb.WrapperL{Number: in.Number}, nil
-}
-
-/*func (s *server) EchoComplex(in *pb.WrapperComplex, stream pb.SendInt_EchoComplexServer) error {
-        err:= stream.Send(&pb.WrapperComplex{Inti: in.Inti, Floatf: in.Floatf, Strings: in.Strings})
+func (s *server) SendServerStringStream(in *pb.StringStream, stream pb.SendStream_SendServerStringStreamServer) error {
+	for i := 0; i < 65536; i += (65536 / 8) {
+		err := stream.Send(&pb.StringStream{Val: in.Val[i:(i + (65536 / 8))]})
 		if err != nil {
 			return err
 		}
-		return nil
-}*/
+	}
+	return nil
+}
 
 func main() {
 	lis, err := net.Listen("tcp", port)
@@ -89,6 +65,6 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterSendIntServer(s, &server{})
+	pb.RegisterSendStreamServer(s, &server{})
 	s.Serve(lis)
 }

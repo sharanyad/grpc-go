@@ -9,6 +9,8 @@ service SendInt {
 	rpc EchoFloat(WrapperF) returns(WrapperF) {}
 	rpc EchoString(WrapperS) returns(WrapperS) {}
 	rpc EchoComplex(WrapperComplex) returns(WrapperComplex) {}
+	rpc EchoDouble(WrapperD) returns(WrapperD) {}
+	rpc EchoLong(WrapperL) returns(WrapperL) {}
 }
 
 message Wrapper {
@@ -26,4 +28,12 @@ message WrapperComplex {
 	int32 inti = 1;
 	float floatf = 2;
 	string strings = 3;
+}
+
+message WrapperD {
+	double number = 1;
+}
+
+message WrapperL {
+	int64 number = 1;
 }

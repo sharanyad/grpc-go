@@ -34,61 +34,54 @@
 package main
 
 import (
+	"fmt"
+	"io"
 	"log"
-	"net"
+	"math/rand"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/sendint/sendint"
+	pb "google.golang.org/grpc/examples/sendint/sendstream"
 )
 
 const (
-	port = ":50051"
+	address      = "localhost:50051"
+	stringLength = 1024
 )
 
-// server is used to implement helloworld.GreeterServer.
-type server struct{}
-
-// SayHello implements helloworld.GreeterServer
-
-func (s *server) EchoFloat(ctx context.Context, in *pb.WrapperF) (*pb.WrapperF, error) {
-	return &pb.WrapperF{Number: in.Number}, nil
-}
-
-func (s *server) EchoInt(ctx context.Context, in *pb.Wrapper) (*pb.Wrapper, error) {
-	return &pb.Wrapper{Number: in.Number}, nil
-}
-
-func (s *server) EchoString(ctx context.Context, in *pb.WrapperS) (*pb.WrapperS, error) {
-	return &pb.WrapperS{Number: in.Number}, nil
-}
-
-func (s *server) EchoComplex(ctx context.Context, in *pb.WrapperComplex) (*pb.WrapperComplex, error) {
-	return &pb.WrapperComplex{Inti: in.Inti, Floatf: in.Floatf, Strings: in.Strings}, nil
-}
-
-func (s *server) EchoDouble(ctx context.Context, in *pb.WrapperD) (*pb.WrapperD, error) {
-	return &pb.WrapperD{Number: in.Number}, nil
-}
-
-func (s *server) EchoLong(ctx context.Context, in *pb.WrapperL) (*pb.WrapperL, error) {
-	return &pb.WrapperL{Number: in.Number}, nil
-}
-
-/*func (s *server) EchoComplex(in *pb.WrapperComplex, stream pb.SendInt_EchoComplexServer) error {
-        err:= stream.Send(&pb.WrapperComplex{Inti: in.Inti, Floatf: in.Floatf, Strings: in.Strings})
-		if err != nil {
-			return err
-		}
-		return nil
-}*/
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 func main() {
-	lis, err := net.Listen("tcp", port)
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Fatalf("did not connect: %v", err)
 	}
-	s := grpc.NewServer()
-	pb.RegisterSendIntServer(s, &server{})
-	s.Serve(lis)
+	defer conn.Close()
+	c := pb.NewSendStreamClient(conn)
+	str := RandStringRunes(65536)
+	// Contact the server and print out its response.
+	stream, err := c.SendServerStringStream(context.Background(), &pb.StringStream{Val: str})
+	for {
+		str, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			//grpclog.Fatalf("%v.ListFeatures(_) = _, %v", client, err)
+		}
+		fmt.Println("string received: %s ; length = %d", str.Val, len(str.Val))
+	}
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	//log.Printf("Greeting: %s", r.Message)
+}
+
+func RandStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }

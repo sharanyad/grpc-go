@@ -34,60 +34,134 @@
 package main
 
 import (
-		"log"
-		"time"
-		"fmt"
-		"golang.org/x/net/context"
-		"google.golang.org/grpc"
-		pb "google.golang.org/grpc/examples/sendint/sendint"
-	   )
+	"fmt"
+	"log"
+	"math/rand"
+	"time"
+
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
+	pb "google.golang.org/grpc/examples/sendint/sendint"
+)
 
 const (
-		//address     = "128.105.37.223:50051"
-		address     = "localhost:50051"
-		defaultNumber = 1
-		numberOfRuns = 1000000
-	  )
+	//address     = "128.105.37.223:50051"
+	address       = "localhost:50051"
+	defaultNumber = 1
+	numberOfRuns  = 100000
+)
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 func main() {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
 	defer conn.Close()
-		c := pb.NewSendIntClient(conn)
+	c := pb.NewSendIntClient(conn)
 
-		// Contact the server and print out its response.
-		var intI int32 = 1
-		//var floatF float32 = 1.12
-		//var stringS string = "erhwkjejkhfjkhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
-		/*if len(os.Args) > 1 {
-		  number = strconv.Atoi(os.Args[1])
-		  }*/
-		var start time.Time
-		var elapsed time.Duration
-		//var elapsed int64
-		//var r pb.SendInt_EchoComplexClient
-		//var r2 *pb.WrapperComplex
-		var r *pb.Wrapper
+	// Contact the server and print out its response.
+	var intI int32 = 1
+	var floatF float32 = 1.12
+	var doubleD float64 = 3.142
+	var longL int64 = 17234234231
+	//var stringS string = "erhwkjejkhfjkhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+	var start time.Time
+	var elapsed time.Duration
+	var r *pb.Wrapper
+	var rf *pb.WrapperF
+	var rd *pb.WrapperD
+	var rl *pb.WrapperL
+	//var rs *pb.WrapperS
 
-		var elapsedTime int64
+	var elapsedTime int64
+	elapsedTime = 0
+
+	for i := 0; i < numberOfRuns; i++ {
+		start = time.Now()
+		r, err = c.EchoInt(context.Background(), &pb.Wrapper{Number: intI})
+		elapsed = time.Since(start)
+		if i == 0 {
+			fmt.Printf("RTT for first packet of int: %d", elapsed.Nanoseconds())
+		}
+		elapsedTime += elapsed.Nanoseconds()
+	}
+	fmt.Printf("\n Average RTT for int: %d", elapsedTime/numberOfRuns)
+	/*if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}*/
+	fmt.Printf("\n Number: %d", r.Number)
+
+	elapsedTime = 0
+	//time.Sleep(2 * time.Second)
+
+	for i := 0; i < numberOfRuns; i++ {
+		start = time.Now()
+		rf, err = c.EchoFloat(context.Background(), &pb.WrapperF{Number: floatF})
+		elapsed = time.Since(start)
+		if i == 0 {
+			fmt.Printf("RTT for first packet of float: %d\n", elapsed.Nanoseconds())
+		}
+		elapsedTime += elapsed.Nanoseconds()
+	}
+	fmt.Printf("\n Average RTT for float: %d\n", elapsedTime/numberOfRuns)
+	/*if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}*/
+	fmt.Printf("\n Number: %d\n", rf.Number)
+
+	elapsedTime = 0
+	//time.Sleep(2 * time.Second)
+	for i := 0; i < numberOfRuns; i++ {
+		start = time.Now()
+		rd, err = c.EchoDouble(context.Background(), &pb.WrapperD{Number: doubleD})
+		elapsed = time.Since(start)
+		if i == 0 {
+			fmt.Printf("RTT for first packet of double: %d\n", elapsed.Nanoseconds())
+		}
+		elapsedTime += elapsed.Nanoseconds()
+	}
+	fmt.Printf("\n Average RTT for double: %d", elapsedTime/numberOfRuns)
+	fmt.Printf("\n Number: %d\n", rd.Number)
+
+	elapsedTime = 0
+	//time.Sleep(2 * time.Second)
+	for i := 0; i < numberOfRuns; i++ {
+		start = time.Now()
+		rl, err = c.EchoLong(context.Background(), &pb.WrapperL{Number: longL})
+		elapsed = time.Since(start)
+		if i == 0 {
+			fmt.Printf("RTT for first packet of long: %d", elapsed.Nanoseconds())
+		}
+		elapsedTime += elapsed.Nanoseconds()
+	}
+	fmt.Printf("\n Average RTT for long: %d", elapsedTime/numberOfRuns)
+	fmt.Printf("\n Number: %d\n", rl.Number)
+
+	for stringLength := 1024; stringLength < 65537; stringLength *= 2 {
 		elapsedTime = 0
-
-		for i:=0; i < numberOfRuns; i++ {
+		//time.Sleep(2 * time.Second)
+		str := RandStringRunes(stringLength)
+		for i := 0; i < numberOfRuns; i++ {
 			start = time.Now()
-			//r, err = c.EchoComplex(context.Background(), &pb.WrapperComplex{Inti: intI, Floatf: floatF, Strings: stringS})
-			//r2, err = r.Recv()
-			r, err = c.EchoInt(context.Background(), &pb.Wrapper{Number: intI})
+			_, err = c.EchoString(context.Background(), &pb.WrapperS{Number: str})
 			elapsed = time.Since(start)
-			//fmt.Printf("\n RTT : %v", elapsed)
+			if i == 0 {
+				fmt.Printf("\nRTT for first packet of string of length %d: %d", stringLength, elapsed.Nanoseconds())
+			}
 			elapsedTime += elapsed.Nanoseconds()
 		}
-	fmt.Printf("\n RTT : %d", elapsedTime/numberOfRuns)
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		fmt.Printf("\n Average RTT for string of length %d: %d", stringLength, elapsedTime/numberOfRuns)
+		//fmt.Printf("\n Number: %d\n", rs.Number)
 	}
-	fmt.Printf("\n Number: %d", r.Number)
-	//fmt.Printf("\n Number:%d, float: %d, string: %s", r2.Inti, r2.Floatf, r2.Strings)
+}
+
+func RandStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }
