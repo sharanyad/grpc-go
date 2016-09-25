@@ -1,0 +1,52 @@
+
+Overhead start for int: 2016-09-24 23:48:30.540242962 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.540678249 -0500 CDT
+Overhead start for int: 2016-09-24 23:48:30.540989194 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.541030278 -0500 CDT
+ Number: 1
+Overhead start for float: 2016-09-24 23:48:30.541231578 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.541268129 -0500 CDT
+Overhead start for float: 2016-09-24 23:48:30.54144779 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.541472266 -0500 CDT
+ Number: %!d(float32=1.12)
+
+Overhead start for double: 2016-09-24 23:48:30.541626747 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.541655534 -0500 CDT
+Overhead start for double: 2016-09-24 23:48:30.541796851 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.541821096 -0500 CDT
+ Number: %!d(float64=3.142)
+
+Overhead start for long: 2016-09-24 23:48:30.541958702 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.541985535 -0500 CDT
+Overhead start for long: 2016-09-24 23:48:30.542146152 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.542169031 -0500 CDT
+ Number: 17234234231
+
+Overhead start for str length 1024: 2016-09-24 23:48:30.542379844 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.542412031 -0500 CDT
+Overhead start for str length 1024: 2016-09-24 23:48:30.542781878 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.542809537 -0500 CDT
+Overhead start for str length 2048: 2016-09-24 23:48:30.543269631 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.543312654 -0500 CDT
+Overhead start for str length 2048: 2016-09-24 23:48:30.543685149 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.543723403 -0500 CDT
+Overhead start for str length 4096: 2016-09-24 23:48:30.544292454 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.544325946 -0500 CDT
+Overhead start for str length 4096: 2016-09-24 23:48:30.544782065 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.544814298 -0500 CDT
+Overhead start for str length 8192: 2016-09-24 23:48:30.545632103 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.545691659 -0500 CDT
+Overhead start for str length 8192: 2016-09-24 23:48:30.546213778 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.546256452 -0500 CDT
+Overhead start for str length 16384: 2016-09-24 23:48:30.547472157 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.547536114 -0500 CDT
+Overhead start for str length 16384: 2016-09-24 23:48:30.54836622 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.548450775 -0500 CDT
+Overhead start for str length 32768: 2016-09-24 23:48:30.550350178 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.550743313 -0500 CDT
+Overhead start for str length 32768: 2016-09-24 23:48:30.55139027 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.551479276 -0500 CDT
+Overhead start for str length 65536: 2016-09-24 23:48:30.555065485 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.555545998 -0500 CDT
+Overhead start for str length 65536: 2016-09-24 23:48:30.556673689 -0500 CDT 
+ End of overhead: 2016-09-24 23:48:30.557131649 -0500 CDT

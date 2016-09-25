@@ -35,6 +35,7 @@ package grpc
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"math"
 	"time"
@@ -99,6 +100,7 @@ func sendRequest(ctx context.Context, codec Codec, compressor Compressor, callHd
 		return nil, Errorf(codes.Internal, "grpc: %v", err)
 	}
 	err = t.Write(stream, outBuf, opts)
+	fmt.Printf(" \n End of overhead: %v", time.Now())
 	// t.NewStream(...) could lead to an early rejection of the RPC (e.g., the service/method
 	// does not exist.) so that t.Write could get io.EOF from wait(...). Leave the following
 	// recvResponse to get the final status.
