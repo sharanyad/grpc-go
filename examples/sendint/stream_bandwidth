@@ -1,0 +1,11 @@
+
+ BW for streamed string of length 1024: 0.0008855640601491853 GBps
+ BW for streamed string of length 2048: 0.0016163515400186282 GBps
+ BW for streamed string of length 4096: 0.0037713712680518077 GBps
+ BW for streamed string of length 8192: 0.007401404868861864 GBps
+ BW for streamed string of length 16384: 0.018466799911135288 GBps
+ BW for streamed string of length 32768: 0.032902863424656634 GBps
+ BW for streamed string of length 65536: 0.05373395633833751 GBps
+ BW for streamed string of length 131072: 0.07271216471178808 GBps
+ BW for streamed string of length 262144: 0.09819848874344869 GBps
+ BW for streamed string of length 524288: 0.10397413758588188 GBps

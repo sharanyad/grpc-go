@@ -35,20 +35,19 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"math/rand"
-	"time"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/sendint/sendstream"
+	pb "google.golang.org/grpc/examples/sendint/sendint"
 )
 
 const (
-	address      = "128.105.37.226:50059"
-	stringLength = 1024
-	numberOfRuns = 1000
+	//address     = "128.105.37.223:50051"
+	address       = "localhost:50051"
+	defaultNumber = 1
+	numberOfRuns  = 100
 )
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -60,30 +59,41 @@ func main() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewSendStreamClient(conn)
-	
-	for strLength := 1024; strLength <= 524289 ; strLength *= 2 {
-		str := RandStringRunes(strLength)
-		start := time.Now()
-		for i:=0 ; i < numberOfRuns; i++ {
-			// Contact the server and print out its response.
-			stream, _ := c.SendServerStringStream(context.Background(), &pb.StringStream{Val: str})
-			
-			for {
-				_, err := stream.Recv()
-				if err == io.EOF {
-					break
-				}
-				if err != nil {
-					//grpclog.Fatalf("%v.ListFeatures(_) = _, %v", client, err)
-				}
-				//fmt.Println("string received: %s ; length = %d", str.Val, len(str.Val))
-			}
-		}	
-		elapsed := time.Since(start)
-	totalData := (float64) (numberOfRuns * 2 * strLength)
-	bandWidth := (totalData /(float64) (elapsed.Nanoseconds()))
-	fmt.Printf("\n BW for streamed string of length %d: %v GBps", strLength, bandWidth)
+	c := pb.NewSendIntClient(conn)
+
+	// Contact the server and print out its response.
+	var intI int32 = 1
+	var floatF float32 = 1.12
+	var doubleD float64 = 3.142
+	var longL int64 = 17234234231
+
+	fmt.Printf("\nStarting int")
+	for i := 0; i < numberOfRuns; i++ {
+		_, err = c.EchoInt(context.Background(), &pb.Wrapper{Number: intI})
+	}
+
+	//time.Sleep(2 * time.Second)
+	fmt.Printf("\nStarting float")
+	for i := 0; i < numberOfRuns; i++ {
+		_, err = c.EchoFloat(context.Background(), &pb.WrapperF{Number: floatF})
+	}
+
+	fmt.Printf("\nStarting double")
+	for i := 0; i < numberOfRuns; i++ {
+		_, err = c.EchoDouble(context.Background(), &pb.WrapperD{Number: doubleD})
+	}
+
+	fmt.Printf("\nStarting long")
+	for i := 0; i < numberOfRuns; i++ {
+		_, err = c.EchoLong(context.Background(), &pb.WrapperL{Number: longL})
+	}
+
+	for stringLength := 1024; stringLength < 524289; stringLength *= 2 {
+		fmt.Printf("\nStarting str len %d", stringLength)
+		str := RandStringRunes(stringLength)
+		for i := 0; i < numberOfRuns; i++ {
+			_, err = c.EchoString(context.Background(), &pb.WrapperS{Number: str})
+		}
 	}
 }
 

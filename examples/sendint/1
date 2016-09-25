@@ -38,7 +38,6 @@ import (
 	"io"
 	"log"
 	"math/rand"
-	"time"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -46,9 +45,9 @@ import (
 )
 
 const (
-	address      = "128.105.37.226:50059"
+	address      = "localhost:50059"
 	stringLength = 1024
-	numberOfRuns = 1000
+	numberofRuns = 20000
 )
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -61,16 +60,18 @@ func main() {
 	}
 	defer conn.Close()
 	c := pb.NewSendStreamClient(conn)
-	
+	var elapsedTime int64
 	for strLength := 1024; strLength <= 524289 ; strLength *= 2 {
+		elapsedTime = 0
 		str := RandStringRunes(strLength)
-		start := time.Now()
+		
 		for i:=0 ; i < numberOfRuns; i++ {
+			start := time.Now()
 			// Contact the server and print out its response.
-			stream, _ := c.SendServerStringStream(context.Background(), &pb.StringStream{Val: str})
+			stream, err := c.SendServerStringStream(context.Background(), &pb.StringStream{Val: str})
 			
 			for {
-				_, err := stream.Recv()
+				str, err := stream.Recv()
 				if err == io.EOF {
 					break
 				}
@@ -80,10 +81,10 @@ func main() {
 				//fmt.Println("string received: %s ; length = %d", str.Val, len(str.Val))
 			}
 		}	
-		elapsed := time.Since(start)
-	totalData := (float64) (numberOfRuns * 2 * strLength)
-	bandWidth := (totalData /(float64) (elapsed.Nanoseconds()))
-	fmt.Printf("\n BW for streamed string of length %d: %v GBps", strLength, bandWidth)
+			elapsed = time.Since(start)
+	totalData := numberOfRuns * 2 * strLength
+	bandWidth := (totalData / elapsed.Nanoseconds())
+	fmt.Printf("\n BW for streamed string of length %d: %d MBps", strLength, bandWidth)
 	}
 }
 

@@ -1,0 +1,11 @@
+
+ BW for string of length 1024: 0.005331528971765332 GBps
+ BW for string of length 2048: 0.009689023894545118 GBps
+ BW for string of length 4096: 0.01863329113047563 GBps
+ BW for string of length 8192: 0.031006425733516575 GBps
+ BW for string of length 16384: 0.05350688182464006 GBps
+ BW for string of length 32768: 0.07388500222177555 GBps
+ BW for string of length 65536: 0.08811826917952077 GBps
+ BW for string of length 131072: 0.09887774245119373 GBps
+ BW for string of length 262144: 0.10195449246115351 GBps
+ BW for string of length 524288: 0.10381203238778036 GBps

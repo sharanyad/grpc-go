@@ -45,8 +45,8 @@ import (
 )
 
 const (
-	//address     = "128.105.37.223:50051"
-	address       = "localhost:50051"
+	address     = "128.105.37.229:50051"
+	//address       = "localhost:50051"
 	defaultNumber = 1
 	numberOfRuns  = 100000
 )
@@ -137,7 +137,7 @@ func main() {
 	fmt.Printf("\n Average RTT for long: %d", elapsedTime/numberOfRuns)
 	fmt.Printf("\n Number: %d\n", rl.Number)
 
-	for stringLength := 1024; stringLength < 524289; stringLength *= 2 {
+	for stringLength := 1024; stringLength < 65537; stringLength *= 2 {
 		elapsedTime = 0
 		//time.Sleep(2 * time.Second)
 		str := RandStringRunes(stringLength)

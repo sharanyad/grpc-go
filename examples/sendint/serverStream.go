@@ -42,7 +42,8 @@ import (
 )
 
 const (
-	port = ":50051"
+	port = ":50059"
+	fragmentSize = 256
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -50,8 +51,9 @@ type server struct{}
 
 // SayHello implements helloworld.GreeterServer
 func (s *server) SendServerStringStream(in *pb.StringStream, stream pb.SendStream_SendServerStringStreamServer) error {
-	for i := 0; i < 65536; i += (65536 / 8) {
-		err := stream.Send(&pb.StringStream{Val: in.Val[i:(i + (65536 / 8))]})
+	strLength := len(in.Val)
+	for i := 0; i < strLength; i += (strLength / fragmentSize) {
+		err := stream.Send(&pb.StringStream{Val: in.Val[i:(i + (strLength / fragmentSize))]})
 		if err != nil {
 			return err
 		}

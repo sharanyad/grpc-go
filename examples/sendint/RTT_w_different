@@ -1,0 +1,35 @@
+RTT for first packet of int: 823765
+ Average RTT for int: 163582
+ Number: 1RTT for first packet of float: 196652
+
+ Average RTT for float: 166166
+
+ Number: %!d(float32=1.12)
+RTT for first packet of double: 203765
+
+ Average RTT for double: 167278
+ Number: %!d(float64=3.142)
+RTT for first packet of long: 202835
+ Average RTT for long: 166226
+ Number: 17234234231
+
+RTT for first packet of string of length 1024: 646855
+ Average RTT for string of length 1024: 688348
+RTT for first packet of string of length 2048: 846438
+ Average RTT for string of length 2048: 876937
+RTT for first packet of string of length 4096: 1251451
+ Average RTT for string of length 4096: 1234281
+RTT for first packet of string of length 8192: 1870530
+ Average RTT for string of length 8192: 2256395
+RTT for first packet of string of length 16384: 3345492
+ Average RTT for string of length 16384: 3483188
+RTT for first packet of string of length 32768: 6149245
+ Average RTT for string of length 32768: 6229886
+RTT for first packet of string of length 65536: 11805137
+ Average RTT for string of length 65536: 12307685
+RTT for first packet of string of length 131072: 25740728
+ Average RTT for string of length 131072: 8979655
+RTT for first packet of string of length 262144: 20725
+ Average RTT for string of length 262144: 2649
+RTT for first packet of string of length 524288: 29359
+ Average RTT for string of length 524288: 2598
